@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #030712;
+  --color-foreground: #f8fafc;
+  --color-primary: #fafafa;
+  --color-primary-foreground: #18181b;
+  --color-secondary: #27272a;
+  --color-secondary-foreground: #fafafa;
+  --color-muted: #27272a;
+  --color-muted-foreground: #a1a1aa;
+  --color-accent: #3f3f46;
+  --color-accent-foreground: #fafafa;
+  --color-destructive: #ef4444;
+  --color-border: rgb(255 255 255 / 0.1);
+  --color-ring: #3b82f6;
+  --color-card: #09090b;
+  --color-card-foreground: #fafafa;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: #030712;
+  color: #f8fafc;
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Barre de défilement fine — même ton que text-white/40 */
+.scrollbar-flat {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+}
+.scrollbar-flat::-webkit-scrollbar {
+  height: 3px;
+}
+.scrollbar-flat::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 0;
+}
+.scrollbar-flat::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 0;
+}
+.scrollbar-flat::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.50);
+}
+
+.will-change-transform {
+  will-change: transform;
+}
+
+@keyframes pulse {
+  50% { opacity: 0.4; }
+}
+
+/* ── Contraste dynamique Jour / Nuit ────────────────────────────────────────
+   Le composant WeatherBackground écrit data-time="day"|"night" sur <html>.
+   La nuit, texte blanc éclatant (défaut). Le jour, les ombres portées
+   prononcées maintiennent la lisibilité sur le glassmorphism lumineux.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Ombres portées sur les titres et valeurs principales en mode jour */
+[data-time="day"] h1 {
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55), 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+[data-time="day"] .text-8xl,
+[data-time="day"] .text-9xl {
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+/* Jour non-ensoleillé : verre dépoli sombre sur ciel voilé/pluvieux */
+[data-time="day"]:not([data-bright="true"]) .backdrop-blur-2xl {
+  background: rgba(0, 0, 0, 0.58) !important;
+  backdrop-filter: blur(36px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(180%) !important;
+}
+
+/* ── Mode Ciel Éclatant (sunny + is_day) ────────────────────────────────────
+   Fond azur vibrant conservé. Cartes : verre navy sombre sur ciel clair —
+   contraste fort, texte blanc, ombre portée bleue. Style widget iOS.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+[data-bright="true"] .backdrop-blur-2xl {
+  background: rgba(6, 18, 42, 0.76) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 8px 40px rgba(0, 20, 80, 0.28), 0 2px 8px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Supprime les text-shadows du mode jour (inutiles sur verre sombre) */
+[data-bright="true"] h1,
+[data-bright="true"] .text-8xl,
+[data-bright="true"] .text-9xl {
+  text-shadow: none !important;
+}
+
+/* Transition fluide 1.5s sur tous les textes et fonds lors du changement de mode */
+p, span, h1, h2, h3, h4, li, label {
+  transition: color 1.5s ease;
+}
+.backdrop-blur-2xl {
+  transition: background-color 1.5s ease, border-color 1.5s ease !important;
+}
+[class*="bg-white\/"] {
+  transition: background-color 1.5s ease;
+}
+[class*="border-white\/"] {
+  transition: border-color 1.5s ease;
+}
+
+/* ── Leaflet overrides — match dark glassmorphism theme ── */
+.leaflet-container {
+  background: #060a0f !important;
+  font-family: var(--font-geist-sans, system-ui, sans-serif) !important;
+}
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(8px) !important;
+  color: rgba(255, 255, 255, 0.25) !important;
+  font-size: 9px !important;
+  border-radius: 8px 0 0 0 !important;
+  padding: 3px 7px !important;
+}
+.leaflet-control-attribution a {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+.leaflet-tooltip {
+  background: rgba(9, 9, 11, 0.88) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6) !important;
+  padding: 5px 10px !important;
+}
+.leaflet-tooltip-top::before {
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
